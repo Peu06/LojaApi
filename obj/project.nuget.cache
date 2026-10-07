@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "dgSpecHash": "cTVyb08b3AY=",
+  "success": true,
+  "projectFilePath": "C:\\APILoja\\LojaApi\\LojaApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Peu\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.8\\microsoft.aspnetcore.openapi.10.0.8.nupkg.sha512",
+    "C:\\Users\\Peu\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\Peu\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.3.0\\swashbuckle.aspnetcore.swaggerui.10.3.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "O pacote 'Microsoft.OpenApi' 2.0.0 tem uma alta vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "C:\\APILoja\\LojaApi\\LojaApi.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\APILoja\\LojaApi\\LojaApi.csproj",
+      "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}
