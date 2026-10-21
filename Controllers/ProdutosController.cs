@@ -1,54 +1,64 @@
+using LojaApi.Data;
 using LojaApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 namespace LojaApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")] // -> api/produtos
 public class ProdutosController : ControllerBase
 {
-    // "Banco" em memória: static para sobreviver entre requisições
-    private static readonly List<Produto> _db = new();
-    private static int _proximoId = 1;
+    // O DbContext chega pelo construtor (injeção de dependência)
+    private readonly LojaDbContext _context;
+    public ProdutosController(LojaDbContext context) => _context = context;
 
     // GET api/produtos
     [HttpGet]
-    public ActionResult<IEnumerable<Produto>> GetAll() => Ok(_db);
+    public async Task<ActionResult<IEnumerable<Produto>>> GetAll()
+        => Ok(await _context.Produtos.ToListAsync());
 
     // GET api/produtos/5
     [HttpGet("{id:int}")]
-    public ActionResult<Produto> GetById(int id)
+    public async Task<ActionResult<Produto>> GetById(int id)
     {
-        var produto = _db.FirstOrDefault(p => p.Id == id);
+        var produto = await _context.Produtos.FindAsync(id);
         return produto is null ? NotFound() : Ok(produto);
     }
 
     // POST api/produtos
     [HttpPost]
-    public ActionResult<Produto> Create(Produto novo)
+    public async Task<ActionResult<Produto>> Create(Produto novo)
     {
         // Se chegou aqui, o modelo JÁ foi validado pelo [ApiController]
-        novo.Id = _proximoId++;
-        _db.Add(novo);
+        novo.Id = 0; // o banco gera o Id; ignora o que o cliente mandou
+        _context.Produtos.Add(novo);
+        await _context.SaveChangesAsync();
         return CreatedAtAction(nameof(GetById), new { id = novo.Id }, novo);
     }
 
     // PUT api/produtos/5
     [HttpPut("{id:int}")]
-    public IActionResult Update(int id, Produto atualizado)
+    public async Task<IActionResult> Update(int id, Produto atualizado)
     {
-        var produto = _db.FirstOrDefault(p => p.Id == id);
+        var produto = await _context.Produtos.FindAsync(id);
         if (produto is null) return NotFound();
 
         produto.Nome = atualizado.Nome;
         produto.Preco = atualizado.Preco;
+        await _context.SaveChangesAsync(); // estado Modified -> UPDATE
         return NoContent();
     }
 
     // DELETE api/produtos/5
     [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var removidos = _db.RemoveAll(p => p.Id == id);
-        return removidos == 0 ? NotFound() : NoContent();
+        var produto = await _context.Produtos.FindAsync(id);
+        if (produto is null) return NotFound();
+
+        _context.Produtos.Remove(produto);
+        await _context.SaveChangesAsync(); // estado Deleted -> DELETE
+        return NoContent();
     }
 }
