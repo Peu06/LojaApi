@@ -1,40 +1,31 @@
 @base = http://localhost:5080/api/produtos
 
-### 1) Criar
+### 1) Sucesso: criar produto (201 + header Location)
 POST {{base}}
 Content-Type: application/json
 
 { "nome": "Teclado mecânico", "preco": 349.90 }
 
-### 2) Criar inválido
+### 2) Sucesso: listar (200) - rodar de novo depois de reiniciar a API
+GET {{base}}
+
+### 3) Erro: id inexistente (404)
+GET {{base}}/9999
+
+### 4) Erro: nome curto (400)
 POST {{base}}
 Content-Type: application/json
 
-{ "nome": "TV", "preco": 0 }
+{ "nome": "ab", "preco": 10 }
 
-### 3) Listar
-GET {{base}}
-
-### 4) Buscar existente
+### BÔNUS 5) Buscar existente (200)
 GET {{base}}/1
 
-### 5) Buscar inexistente
-GET {{base}}/999
-
-### 6) Atualizar existente
-PUT {{base}}/1
+### BÔNUS 6) Atualizar (204) - mostra o estado Modified virando UPDATE
+PUT {{base}}/2
 Content-Type: application/json
 
 { "nome": "Teclado gamer", "preco": 399.90 }
 
-### 7) Atualizar inexistente
-PUT {{base}}/999
-Content-Type: application/json
-
-{ "nome": "Teclado gamer", "preco": 399.90 }
-
-### 8) Remover
-DELETE {{base}}/1
-
-### 9) Remover de novo
+### BÔNUS 7) Remover (204) - mostra o Remove virando DELETE
 DELETE {{base}}/1
